@@ -24,6 +24,8 @@ class UsersServices {
          });
          return create;
     }
+
+    
 }
 
 export { UsersServices };

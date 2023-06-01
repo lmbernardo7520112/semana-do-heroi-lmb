@@ -3,3 +3,9 @@ export interface ICreate {
     email: string;
     password: string;
 }
+
+export interface IUpdate {
+    name?: string;
+    oldPassword?: string;
+    newPassword?: string;
+  }

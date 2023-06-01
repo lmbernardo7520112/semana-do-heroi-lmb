@@ -27,6 +27,15 @@ class UsersController {
   auth() {
     // Your implementation here
   }
+
+  update(request: Request, response: Response, next: NextFunction){
+    const { name, oldPassword, newPassword } = request.body;
+    console.log(request.file);
+    try {
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export { UsersController };

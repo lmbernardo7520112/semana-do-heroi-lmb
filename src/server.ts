@@ -2,6 +2,7 @@ import express, { Application, Request, Response, NextFunction } from 'express';
 import { UsersController } from './controllers/UsersController';
 import { UsersRoutes } from './routes/users.routes';
 
+
 const app: Application = express();
 
 app.use(express.json());
@@ -9,8 +10,8 @@ app.use(express.urlencoded({ extended: true }));
 
 const usersRoutes = new UsersRoutes().getRoutes();
 
+//app.use('/users', upload.any(), usersRoutes);
 app.use('/users', usersRoutes);
-
 app.use(
   (err: Error, request: Request, response: Response, next: NextFunction) => {
     if (err instanceof Error) {
