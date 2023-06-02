@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import { UsersServices } from '../services/UsersServices';
-import { v4 as uuid } from 'uuid';
-import { s3 } from '../config/aws';
+//import { IUpdate, FileUpload } from '../interfaces';
+//import { s3 } from '../config/aws';
 class UsersController {
-    private usersServices: UsersServices;
-    constructor(){
-        this.usersServices = new UsersServices();
-    }
+  private usersServices: UsersServices;
+  constructor() {
+    this.usersServices = new UsersServices();
+  }
   index() {
     // Your implementation here
   }
@@ -25,23 +25,27 @@ class UsersController {
     }
   }
 
-  auth() {
-    // Your implementation here
+  auth(request: Request, response: Response, next: NextFunction) {
+   try {
+    const result = this.usersServices.auth();
+    return response.json(result);
+  } catch (error) {
+    next(error);
+   }
   }
 
-  async update(request: Request, response: Response, next: NextFunction){
+  async update(request: Request, response: Response, next: NextFunction) {
     const { name, oldPassword, newPassword } = request.body;
-    console.log(request.file);
+    //console.log(request.file);
     try {
-      const avatar_url = request.file?.buffer;
-      const uploads3 = await s3.upload({
-        Bucket: 'semana-heroi-lmb',
-        Key: `${uuid()}-${request.file?.originalname}`,
-        //ACL: 'public-read',
-        Body: avatar_url,
-      }).promise();
-
-      console.log('url imagem =>', uploads3.Location);
+      const result = await this.usersServices.update({
+        name,
+        oldPassword,
+        newPassword,
+        avatar_url: request.file,
+      });
+      return response.status(200).json(result);
+      
     } catch (error) {
       next(error);
     }
@@ -49,5 +53,5 @@ class UsersController {
 }
 
 export { UsersController };
-    
+
 

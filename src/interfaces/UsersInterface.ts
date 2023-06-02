@@ -5,7 +5,17 @@ export interface ICreate {
 }
 
 export interface IUpdate {
-    name?: string;
-    oldPassword?: string;
-    newPassword?: string;
-  }
+    name: string;
+    oldPassword: string;
+    newPassword: string;
+    avatar_url?: FileUpload;
+}
+
+interface FileUpload {
+    filename: string;
+    originalname: string;
+    encoding: string;
+    mimetype: string;
+    buffer: Buffer;
+    size: number;
+}
