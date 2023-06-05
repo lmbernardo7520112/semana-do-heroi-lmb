@@ -1,5 +1,11 @@
 import { prisma } from '../database/prisma';
 import { ICreate } from '../interfaces/UsersInterface';
+//import { PrismaClient } from '@prisma/client'
+//const prisma = new PrismaClient()
+//import { PrismaClient, Users } from '@prisma/client';
+
+//const prisma = new PrismaClient();
+
 
 
 class UsersRepository{
@@ -18,21 +24,42 @@ class UsersRepository{
     async findUserByEmail(email: string){
         const result = await prisma.users.findUnique({
             where: {
-                email,
+                email: email,
             },
         });
         return result;
     }
 
-    async update (name: string, newPassword: string, avatar_url: string){
+    async findUserById(id: string){
+        const result = await prisma.users.findUnique({
+            where: {
+                id,
+            },
+        });
+        return result;
+    }
+
+    async update (name: string, avatar_url: string, user_id: string){
         const result = await prisma.users.update({
             where: {
-
+                id: user_id,
             },
             data: {
                 name,
-                password: newPassword,
                 avatar_url,
+            },
+            
+        });
+        return result;
+    }
+
+    async updatePassword (newPassword: string, user_id: string){
+        const result = await prisma.users.update({
+            where: {
+                id: user_id,
+            },
+            data: {
+                password: newPassword,
             },
             
         });

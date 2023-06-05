@@ -1,12 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
 import { UsersServices } from '../services/UsersServices';
-//import { IUpdate, FileUpload } from '../interfaces';
-//import { s3 } from '../config/aws';
+//import { IUpdate } from '../interfaces/UsersInterface';
+import { IUpdate, FileUpload } from '../interfaces';
+import { s3 } from '../config/aws';
+
+interface CustomRequest extends Request {
+  user_id: string;
+}
+
 class UsersController {
   private usersServices: UsersServices;
+  
   constructor() {
     this.usersServices = new UsersServices();
   }
+
   index() {
     // Your implementation here
   }
@@ -25,9 +33,10 @@ class UsersController {
     }
   }
 
-  auth(request: Request, response: Response, next: NextFunction) {
-   try {
-    const result = this.usersServices.auth();
+  async auth(request: Request, response: Response, next: NextFunction) {
+    const { email, password } = request.body;
+    try {
+    const result = await this.usersServices.auth(email, password);
     return response.json(result);
   } catch (error) {
     next(error);
@@ -36,13 +45,14 @@ class UsersController {
 
   async update(request: Request, response: Response, next: NextFunction) {
     const { name, oldPassword, newPassword } = request.body;
-    //console.log(request.file);
+    const { user_id } = request;
     try {
       const result = await this.usersServices.update({
         name,
         oldPassword,
         newPassword,
-        avatar_url: request.file,
+        avatar_url: request.file as FileUpload,
+        user_id,
       });
       return response.status(200).json(result);
       
